@@ -1,201 +1,160 @@
-# Workspace Analysis
+# Playwright NopCommerce Framework 2026
 
-## Project Overview
+A TypeScript Playwright test framework for NopCommerce UI validation using page objects and custom fixtures.
 
-- Root folder: `g:\Playwright_nopcommerce_framework_2026`
-- Project type: Playwright test framework in TypeScript
-- Test runner: `@playwright/test`
-- Scripts defined in `package.json`:
-  - `npm run test:qa` -> `cross-env ENV=qa playwright test`
-  - `npm run test:stage` -> `cross-env ENV=stage playwright test`
-  - `npm run test:preprod` -> `cross-env ENV=preprod playwright test`
+## Features
 
-## Configuration
+- Landing page validation
+- Login validation with invalid credentials
+- Forgot password validation
 
-### `playwright.config.ts`
+## Project Structure
 
-- Imports `defineConfig` and `devices` from `@playwright/test`
-- Imports `environments` from `./src/config/environments`
-- Selects environment via `process.env.ENV || "qa"`
-- Uses `environments[env as keyof typeof environments]` as `baseURL`
-- Sets `testDir` to `./tests`
-- Enables `fullyParallel: true`
-- Uses `reporter: 'html'`
-- Sets `headless: false`
-- Defines a single project:
-  - `chromium`
+- `src`: page objects, fixtures, configuration, and test data
+- `tests`: Playwright test specifications
+- `playwright.config.ts`: Playwright runtime configuration
+- `package.json`: npm scripts and dev dependencies
 
-### `tsconfig.json`
+## Tech Stack
 
-- `target`: `ES2022`
-- `module`: `NodeNext`
-- `moduleResolution`: `NodeNext`
-- `strict`: `true`
-- `esModuleInterop`: `true`
-- `resolveJsonModule`: `true`
-- `types`: [`node`]
-- Includes all `**/*.ts`
-- Excludes `node_modules`, `allure-report`, `playwright-report`, `test-results`
+- TypeScript
+- Playwright
+- `@playwright/test`
+- `cross-env`
 
-## Environment Data
+## Prerequisites
 
-### `src/config/environments.ts`
+- Node.js
+- npm
 
-- `qa`: `https://naveenautomationlabs.com/opencart/`
-- `stage`: `https://naveenautomationlabsStage.com/opencart/`
-- `preprod`: `https://naveenautomationlabsPreProd.com/opencart/`
+## Installation
 
-## Base Page Class
+```bash
+npm install
+```
 
-### `src/basePage/basePage.ts`
+## Running Tests
 
-- Class: `Basepage`
-- Constructor parameter: `page: Page`
-- Protected property: `page`
-- Protected method: `getNormalizedText(locator: Locator): Promise<string>`
-  - Returns `locator.innerText()` with whitespace normalized and trimmed
+Available npm scripts:
 
-## Fixtures and Test Extensions
+```bash
+npm run test:qa
+npm run test:stage
+npm run test:preprod
+```
 
-### `src/fixtures/testFixture.ts`
+Each script runs `cross-env ENV=<env> playwright test`.
 
-- Imports `test as base` and `expect` from `@playwright/test`
-- Imports page objects:
-  - `LandingPage` from `../pages/landingPage/LandingPage`
-  - `LoginPage` from `../pages/loginPage/LoginPage`
-  - `ForgetPasswordPage` from `../pages/forgetPasswordPage/forgetPasswordPage`
-- Extends fixture with `customeFixture`:
-  - `landingPage: LandingPage`
-  - `loginPage: LoginPage`
-  - `forgetPasswordPage: ForgetPasswordPage`
-- Fixture definitions:
-  - `landingPage` creates `new LandingPage(page)`
-  - `loginPage` creates `new LoginPage(page)`
-  - `forgetPasswordPage` creates `new ForgetPasswordPage(page)`
-- `test.beforeEach` sets viewport size to `1920x1080`
-- Exports `test` and `expect`
+## Environment Configuration
 
-## Page Objects
+Environment URLs are defined in `src/config/environments.ts`.
 
-### `src/pages/landingPage/LandingPage.ts`
+Available environments:
 
-- Class: `LandingPage` extends `Basepage`
-- Locators:
-  - `footerCopyright` -> `//footer//p`
-  - `myAccount` -> `//a[@title='My Account']//span[text()='My Account']`
-  - `register` -> `//a[text()="Register"]`
-  - `login` -> `//a[text()="Login"]`
-- Methods:
-  - `navigateToLandingPage()` -> `this.page.goto("")`
-  - `getPageTitle()` -> `this.page.title()`
-  - `getCopyrightText()` -> `getNormalizedText(this.footerCopyright)`
-  - `navigateToLoginPage()` -> clicks `myAccount`, then `login`
-  - `navigateToRegisterPage()` -> clicks `myAccount`, then `register`
+- `qa`
+- `stage`
+- `preprod`
 
-### `src/pages/loginPage/LoginPage.ts`
+`playwright.config.ts` selects the environment using `process.env.ENV || "qa"` and resolves `baseURL` from `environments`.
 
-- Class: `LoginPage` extends `Basepage`
-- Locators:
-  - `inputEmailAddress` -> `input#input-email`
-  - `inputPassword` -> `input#input-password`
-  - `loginButton` -> `//input[@value='Login']`
-  - `forgetPasswordLink` -> `//form//a[text()='Forgotten Password']`
-  - `warningMessage` -> `//div[@class='alert alert-danger alert-dismissible']`
-- Methods:
-  - `submitLogin(emailAddress: string, password: string)`
-    - fills email and password, clicks login button
-  - `getWarnigMessage()`
-    - returns normalized warning text
-  - `clickForgotPassword()`
-    - clicks the forgotten password link
+## Framework Architecture
 
-### `src/pages/forgetPasswordPage/forgetPasswordPage.ts`
+- `playwright.config.ts` loads runtime configuration and `baseURL`
+- `src/fixtures/testFixture.ts` defines custom fixtures
+- Page objects are implemented in `src/pages`
+- Shared utilities are in `src/basePage`
+- Test data is stored in `src/testdata`
 
-- Class: `ForgetPasswordPage` extends `Basepage`
-- Locators:
-  - `inputEmailAddress` -> `input#input-email`
-  - `continueButton` -> `//input[@value='Continue']`
-  - `warningMessage` -> `//div[@class='alert alert-danger alert-dismissible']`
-- Methods:
-  - `submitForgetEmailAddress(email: string)`
-    - fills email input, clicks continue button
-  - `getWarnigMessage()`
-    - returns normalized warning text
+## Fixtures
 
-## Test Files
+Defined in `src/fixtures/testFixture.ts`:
 
-### `tests/landing/landing.spec.ts`
+- `landingPage`
+- `loginPage`
+- `forgetPasswordPage`
 
-- Uses fixture: `test` and `expect` from `../../src/fixtures/testFixture`
-- Imports expected data from `../../src/testData/expectedData/landingPage.json`
-- Test case:
-  - `TC_01 - Verify application launches successfully`
-    - `landingPage.navigateToLandingPage()`
-    - asserts `landingPage.getPageTitle()` equals `pageTitle`
-    - asserts `landingPage.getCopyrightText()` equals `copyrightText`
+The fixture file extends Playwright `test` and exports `test` and `expect`.
 
-### `tests/authentication/login.spec.ts`
+A `beforeEach` hook sets viewport size to `1920x1080`.
 
-- Uses fixture: `test` and `expect` from `../../src/fixtures/testFixture`
-- Imports expected data from `../../src/testData/expectedData/loginPage.json`
-- Imports input data from `../../src/testdata/inputTestData/loginPage.json`
-- Test case:
-  - `TC_002 - Verify login fails with invalid Email`
-    - navigates to landing page and login page
-    - submits login with invalid credentials from input data
-    - asserts `loginPage.getWarnigMessage()` equals expected warning message
+## Page Object Model
 
-### `tests/authentication/forgot-password.spec.ts`
+Implemented page objects:
 
-- Uses fixture: `test` and `expect` from `../../src/fixtures/testFixture`
-- Imports expected data from `../../src/testdata/expectedData/fogetPasswordPage.json`
-- Imports input data from `../../src/testdata/inputTestData/fogetPasswordPage.json`
-- Test cases:
-  - `TC_001 - Verify warning message is displayed when the Email Address field is left blank`
-    - navigates to landing page and login page
-    - clicks forgot password link
-    - submits blank email
-    - asserts warning message equals expected data
-  - `TC_002 - Verify warning message is displayed for an invalid email format`
-    - navigates to landing page and login page
-    - clicks forgot password link
-    - submits invalid email from input data
-    - asserts warning message equals expected data
+- `src/pages/landingPage/LandingPage.ts`
+- `src/pages/loginPage/LoginPage.ts`
+- `src/pages/forgetPasswordPage/forgetPasswordPage.ts`
+
+Shared base page utility:
+
+- `src/basePage/basePage.ts`
 
 ## Test Data
 
-### `src/testdata/expectedData/landingPage.json`
+Input test data files:
 
-- `pageTitle`: `Your Store`
-- `copyrightText`: `Powered By OpenCart naveenopencart © 2026`
+- `src/testdata/inputTestData/loginPage.json`
+- `src/testdata/inputTestData/fogetPasswordPage.json`
 
-### `src/testdata/expectedData/loginPage.json`
+Expected test data files:
 
-- `warningMessage`: `Warning: No match for E-Mail Address and/or Password.`
+- `src/testdata/expectedData/landingPage.json`
+- `src/testdata/expectedData/loginPage.json`
+- `src/testdata/expectedData/fogetPasswordPage.json`
 
-### `src/testdata/expectedData/fogetPasswordPage.json`
+## Folder Structure
 
-- `warningMessage`: `Warning: The E-Mail Address was not found in our records, please try again!`
-
-### `src/testdata/inputTestData/loginPage.json`
-
-- `invalidLoginDetails[0].emailAddress`: `Test@gmail.com`
-- `invalidLoginDetails[0].password`: `Admin@123`
-
-### `src/testdata/inputTestData/fogetPasswordPage.json`
-
-- `inValidEmailId`: `TEST$gmail.com`
+```
+.
+├── LICENSE.txt
+├── package.json
+├── playwright.config.ts
+├── README.md
+├── tsconfig.json
+├── src
+│   ├── basePage
+│   │   └── basePage.ts
+│   ├── config
+│   │   └── environments.ts
+│   ├── fixtures
+│   │   └── testFixture.ts
+│   ├── pages
+│   │   ├── landingPage
+│   │   │   └── LandingPage.ts
+│   │   ├── loginPage
+│   │   │   └── LoginPage.ts
+│   │   └── forgetPasswordPage
+│   │       └── forgetPasswordPage.ts
+│   └── testdata
+│       ├── expectedData
+│       │   ├── landingPage.json
+│       │   ├── loginPage.json
+│       │   └── fogetPasswordPage.json
+│       └── inputTestData
+│           ├── loginPage.json
+│           └── fogetPasswordPage.json
+├── tests
+│   ├── authentication
+│   │   ├── forgot-password.spec.ts
+│   │   └── login.spec.ts
+│   └── landing
+│       └── landing.spec.ts
+├── playwright-report
+└── test-results
+```
 
 ## Execution Flow
 
-- Command `npm run test:qa` sets `ENV=qa`
-- `playwright.config.ts` resolves `baseURL` from `environments.qa`
-- Each test uses the `test` fixture from `src/fixtures/testFixture.ts`
-- `LandingPage.navigateToLandingPage()` loads the configured base URL via `page.goto("")`
-- The fixture creates page object instances for each test before use
-- `test.beforeEach` sets the viewport to `1920x1080`
+1. Run `npm run test:<env>`.
+2. `playwright.config.ts` reads `process.env.ENV` and selects `baseURL`.
+3. Fixtures from `src/fixtures/testFixture.ts` create `landingPage`, `loginPage`, and `forgetPasswordPage`.
+4. Tests execute page object methods.
+5. Assertions compare values against expected test data.
 
-## Notes
+## Contributing
 
-- The project is Windows-compatible and uses TypeScript source files only.
-- The workspace contains a single Playwright project configuration focused on Chromium.
+Contributions are welcome. Please open issues or pull requests for changes.
+
+## License
+
+This project is licensed under the MIT License.
