@@ -1,10 +1,12 @@
 import {test as base,expect} from '@playwright/test'
 import { LandingPage } from '../pages/landingPage/LandingPage'
 import { LoginPage } from '../pages/loginPage/LoginPage'
+import { ForgetPasswordPage } from '../pages/forgetPasswordPage/forgetPasswordPage'
 
 type customeFixture = {
     landingPage :LandingPage
     loginPage : LoginPage
+    forgetPasswordPage:ForgetPasswordPage
 }
 
 export const test = base.extend<customeFixture>({
@@ -15,6 +17,9 @@ export const test = base.extend<customeFixture>({
 
     loginPage :async ({page},use)=>{
         await use(new LoginPage(page))
+    },
+    forgetPasswordPage :async ({page},use)=>{
+        await use(new ForgetPasswordPage(page))
     }
 })
 

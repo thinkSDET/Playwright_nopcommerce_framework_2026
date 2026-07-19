@@ -25,4 +25,7 @@ export class LoginPage extends Basepage {
     async getWarnigMessage(){
        return await this.getNormalizedText(this.warningMessage)
     }
+    async clickForgotPassword() {
+        await this.forgetPasswordLink.click()
+    } 
 }
