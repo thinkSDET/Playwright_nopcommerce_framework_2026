@@ -6,7 +6,7 @@ export class Basepage {
     constructor(page: Page) {
         this.page = page
     }
-
+    
     protected async getNormalizedText(locator: Locator): Promise<string> {
         return (await locator.innerText()).replace(/\s+/g, " ").trim()
     }
