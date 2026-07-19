@@ -1,12 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import { environments } from "./src/config/environments";
 
-const environments = {
-    qa: "https://naveenautomationlabs.com/opencart/",
-    stage: "https://naveenautomationlabsStage.com/opencart/",
-    preprod: "https://naveenautomationlabsPreProd.com/opencart/"
-};
+
 const env = process.env.ENV || "qa";
-
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
