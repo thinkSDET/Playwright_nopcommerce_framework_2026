@@ -2,13 +2,18 @@
   "name": "playwright_nopcommerce_framework_2026",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test:qa": "cross-env ENV=qa playwright test",
+    "test:stage": "cross-env ENV=stage playwright test",
+    "test:preprod": "cross-env ENV=preprod playwright test"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "@playwright/test": "^1.61.1",
-    "@types/node": "^26.1.1"
+    "@types/node": "^26.1.1",
+    "cross-env": "^10.1.0"
   }
 }

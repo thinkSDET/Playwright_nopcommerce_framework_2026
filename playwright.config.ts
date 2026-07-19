@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import { environments } from "./src/config/environments";
 
+
+const env = process.env.ENV || "qa";
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -27,6 +30,7 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'https://naveenautomationlabs.com/opencart/',
+     baseURL: environments[env as keyof typeof environments],
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
    // trace: 'on-first-retry',
