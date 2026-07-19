@@ -1,0 +1,118 @@
+# Page Objects
+
+## Basepage
+- Class Name: `Basepage`
+- File Location: `src/basePage/basePage.ts`
+- Purpose: Provide shared page utilities for page objects.
+- Responsibilities:
+  - Store Playwright `Page` instance.
+  - Normalize locator text.
+- Parent Class: Not Found
+- Constructor: `constructor(page: Page)`
+- Locators: none
+- Public Methods:
+  - `protected async getNormalizedText(locator: Locator): Promise<string>`
+- Navigation Methods: none
+- Dependencies:
+  - `Page`, `Locator` from `@playwright/test`
+- Related Test Data: Not Found
+- Related Expected Data: Not Found
+- Used By Tests: Not Found
+
+## LandingPage
+- Class Name: `LandingPage`
+- File Location: `src/pages/landingPage/LandingPage.ts`
+- Purpose: Encapsulate landing page actions and state.
+- Responsibilities:
+  - Navigate to landing page.
+  - Retrieve page title.
+  - Retrieve footer copyright text.
+  - Navigate to login and register pages.
+- Parent Class: `Basepage`
+- Constructor: `constructor(page: Page)`
+- Locators:
+  - `footerCopyright`: `//footer//p`
+  - `myAccount`: `//a[@title='My Account']//span[text()='My Account']`
+  - `register`: `//a[text()="Register"]`
+  - `login`: `//a[text()="Login"]`
+- Public Methods:
+  - `async navigateToLandingPage()`
+  - `async getPageTitle()`
+  - `async getCopyrightText()`
+  - `async navigateToLoginPage()`
+  - `async navigateToRegisterPage()`
+- Navigation Methods:
+  - `navigateToLoginPage()`
+  - `navigateToRegisterPage()`
+- Dependencies:
+  - `Page`, `Locator` from `@playwright/test`
+  - `Basepage`
+- Related Test Data:
+  - `src/testdata/expectedData/landingPage.json`
+- Related Expected Data:
+  - `src/testdata/expectedData/landingPage.json`
+- Used By Tests:
+  - `tests/landing/landing.spec.ts`
+  - `tests/authentication/login.spec.ts`
+  - `tests/authentication/forgot-password.spec.ts`
+
+## LoginPage
+- Class Name: `LoginPage`
+- File Location: `src/pages/loginPage/LoginPage.ts`
+- Purpose: Encapsulate login page actions and state.
+- Responsibilities:
+  - Fill login email and password.
+  - Submit login.
+  - Click forgotten password link.
+  - Retrieve warning message text.
+- Parent Class: `Basepage`
+- Constructor: `constructor(page: Page)`
+- Locators:
+  - `inputEmailAddress`: `input#input-email`
+  - `inputPassword`: `input#input-password`
+  - `loginButton`: `//input[@value='Login']`
+  - `forgetPasswordLink`: `//form//a[text()='Forgotten Password']`
+  - `warningMessage`: `//div[@class='alert alert-danger alert-dismissible']`
+- Public Methods:
+  - `async submitLogin(emailAddress: string, password: string)`
+  - `async getWarnigMessage()`
+  - `async clickForgotPassword()`
+- Navigation Methods: none
+- Dependencies:
+  - `Page`, `Locator` from `@playwright/test`
+  - `Basepage`
+- Related Test Data:
+  - `src/testdata/inputTestData/loginPage.json`
+- Related Expected Data:
+  - `src/testdata/expectedData/loginPage.json`
+- Used By Tests:
+  - `tests/authentication/login.spec.ts`
+  - `tests/authentication/forgot-password.spec.ts`
+
+## ForgetPasswordPage
+- Class Name: `ForgetPasswordPage`
+- File Location: `src/pages/forgetPasswordPage/forgetPasswordPage.ts`
+- Purpose: Encapsulate forgotten password page actions and state.
+- Responsibilities:
+  - Fill email address.
+  - Submit forgotten password form.
+  - Retrieve warning message text.
+- Parent Class: `Basepage`
+- Constructor: `constructor(page: Page)`
+- Locators:
+  - `inputEmailAddress`: `input#input-email`
+  - `continueButton`: `//input[@value='Continue']`
+  - `warningMessage`: `//div[@class='alert alert-danger alert-dismissible']`
+- Public Methods:
+  - `async submitForgetEmailAddress(email: string)`
+  - `async getWarnigMessage()`
+- Navigation Methods: none
+- Dependencies:
+  - `Page`, `Locator` from `@playwright/test`
+  - `Basepage`
+- Related Test Data:
+  - `src/testdata/inputTestData/fogetPasswordPage.json`
+- Related Expected Data:
+  - `src/testdata/expectedData/fogetPasswordPage.json`
+- Used By Tests:
+  - `tests/authentication/forgot-password.spec.ts`
