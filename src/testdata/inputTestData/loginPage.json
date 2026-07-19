@@ -1,0 +1,8 @@
+{
+    "invalidLoginDetails": [
+        {
+            "emailAddress": "Test@gmail.com",
+            "password": "Admin@123"
+        }
+    ]
+}
