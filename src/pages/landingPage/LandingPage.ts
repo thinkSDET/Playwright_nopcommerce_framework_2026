@@ -15,11 +15,9 @@ export class LandingPage extends Basepage {
         this.register = page.locator('//a[text()="Register"]')
         this.login = page.locator('//a[text()="Login"]')
     }
-
     async navigateToLandingPage() {
-        await this.page.goto("https://naveenautomationlabs.com/opencart/");
+        await this.page.goto("");
     }
-
     async getPageTitle() {
         return await this.page.title()
     }
