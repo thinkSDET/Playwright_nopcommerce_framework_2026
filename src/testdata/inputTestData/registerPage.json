@@ -1,0 +1,9 @@
+{
+    "validRegistrationDetails": {
+        "firstName": "thinkSDET",
+        "lastName": "Automation",
+        "emailAddress": "",
+        "telephoneNumber": "",
+        "password": "Admin@123"
+    }
+}

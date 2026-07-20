@@ -1,0 +1,13 @@
+{
+    "accountSuccessfullyCreatedHeading": "Your Account Has Been Created!",
+    "mandatoryFieldValidations": [
+        {
+            "firstNameValidation": "First Name must be between 1 and 32 characters!",
+            "lastNameValidation": "Last Name must be between 1 and 32 characters!",
+            "emailValidation": "E-Mail Address does not appear to be valid!",
+            "telephoneValidation": "Telephone must be between 3 and 32 characters!",
+            "passwordValidation": "Password must be between 4 and 20 characters!",
+            "privacyPolicyWarning": "Warning: You must agree to the Privacy Policy!"
+        }
+    ]
+}
