@@ -21,6 +21,32 @@ test("TC_REG_002 - Verify validation messages are displayed when submitting the 
     await landingPage.navigateToLandingPage();
     await landingPage.navigateToRegisterPage();
     await registerAccountPage.clickContinue();
+    const validationMessages =
+    await registerAccountPage.getValidationMessages();
+     expect(
+            validationMessages.firstName
+        ).toBe(registerPageExpectedData.mandatoryFieldValidations[0].firstNameValidation);
+
+        expect(
+           validationMessages.lastName
+        ).toBe(registerPageExpectedData.mandatoryFieldValidations[0].lastNameValidation);
+
+        expect(
+            validationMessages.email
+        ).toBe(registerPageExpectedData.mandatoryFieldValidations[0].emailValidation);
+
+        expect(
+            validationMessages.telephone
+        ).toBe(registerPageExpectedData.mandatoryFieldValidations[0].telephoneValidation);
+
+        expect(
+           validationMessages.password
+        ).toBe(registerPageExpectedData.mandatoryFieldValidations[0].passwordValidation);
+
+        expect(
+            validationMessages.privacyPolicy
+        ).toBe(registerPageExpectedData.mandatoryFieldValidations[0].privacyPolicyWarning);
+
 });
 
 test("TC_REG_003 - Verify validation messages are displayed for invalid registration data", async ({

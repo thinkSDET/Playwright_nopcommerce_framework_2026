@@ -14,6 +14,12 @@ export class RegisterAccountPage extends Basepage {
     private readonly privacyPolicyCheckBox: Locator
     private readonly privacyPolicyLink: Locator
     private readonly continueButton: Locator
+    private readonly firstNameValidation: Locator;
+    private readonly lastNameValidation: Locator;
+    private readonly emailValidation: Locator;
+    private readonly telephoneValidation: Locator;
+    private readonly passwordValidation: Locator;
+    private readonly privacyPolicyWarning: Locator;
 
     constructor(page: Page) {
         super(page)
@@ -28,6 +34,12 @@ export class RegisterAccountPage extends Basepage {
         this.privacyPolicyCheckBox = page.locator("//input[@type='checkbox']")
         this.privacyPolicyLink = page.locator("//a[@class='agree']/b")
         this.continueButton = page.locator("//input[@type='submit']")
+        this.firstNameValidation = page.locator("//input[@id='input-firstname']/following-sibling::div")
+        this.lastNameValidation = page.locator("//input[@id='input-lastname']/following-sibling::div")
+        this.emailValidation = page.locator("//input[@id='input-email']/following-sibling::div")
+        this.telephoneValidation = page.locator("//input[@id='input-telephone']/following-sibling::div")
+        this.passwordValidation = page.locator("//input[@id='input-password']/following-sibling::div")
+        this.privacyPolicyWarning = page.locator("//div[@id='account-register']//ul//following-sibling::div[1]")
     }
 
     private async enterFirstName(firstName: string) {
@@ -54,21 +66,39 @@ export class RegisterAccountPage extends Basepage {
         await this.confirmPassword.fill(password)
     }
 
-     async acceptPrivacyPolicy() {
+    async acceptPrivacyPolicy() {
         await this.privacyPolicyCheckBox.click()
     }
 
-     async clickContinue() {
+    async clickContinue() {
         await this.continueButton.click()
     }
+    async fillMandatoryRegistrationDetails(data: any) {
+        await this.enterFirstName(data.firstName);
+        await this.enterLastName(data.lastName);
+        await this.enterEmailAddress(data.emailAddress);
+        await this.enterTelephoneNumber(data.telephoneNumber);
+        await this.enterPassword(data.password);
+        await this.enterConfirmPassword(data.password);
+        await this.page.waitForTimeout(4000)
+    }
+    async getValidationMessages() {
 
-    async fillMandatoryRegistrationDetails(data:any) {
-    await this.enterFirstName(data.firstName);
-    await this.enterLastName(data.lastName);
-    await this.enterEmailAddress(data.emailAddress);
-    await this.enterTelephoneNumber(data.telephoneNumber);
-    await this.enterPassword(data.password);
-    await this.enterConfirmPassword(data.password);
-    await this.page.waitForTimeout(4000)
+    return {
+
+        firstName: await this.getNormalizedText(this.firstNameValidation),
+
+        lastName: await this.getNormalizedText(this.lastNameValidation),
+
+        email: await this.getNormalizedText(this.emailValidation),
+
+        telephone: await this.getNormalizedText(this.telephoneValidation),
+
+        password: await this.getNormalizedText(this.passwordValidation),
+
+        privacyPolicy: await this.getNormalizedText(this.privacyPolicyWarning)
+
+    };
+
 }
 }
