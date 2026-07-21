@@ -1,5 +1,5 @@
 import {test,expect} from '../../src/fixtures/testFixture'
-import loginExpectedData from "../../src/testData/expectedData/loginPage.json";
+import loginExpectedData from "../../src/testdata/expectedData/loginPage.json";
 import loginInputData from '../../src/testdata/inputTestData/loginPage.json'
 
 test("TC_001 - Verify login fails with invalid Email",async({landingPage,loginPage})=>{

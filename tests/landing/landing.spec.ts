@@ -1,5 +1,5 @@
 import {test,expect} from '../../src/fixtures/testFixture'
-import landingPageData from "../../src/testData/expectedData/landingPage.json";
+import landingPageData from "../../src/testdata/expectedData/landingPage.json";
 import * as allure from "allure-js-commons";
 
 test("TC_01 - Verify application launches successfully",async({landingPage})=>{
