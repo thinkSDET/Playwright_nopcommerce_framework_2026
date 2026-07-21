@@ -4,5 +4,12 @@
             "emailAddress": "Test@gmail.com",
             "password": "Admin@123"
         }
+    ],
+
+    "validLoginDetails" :[
+        {
+            "emailAddress": "thinksdet123@gmail.com",
+            "password": "Admin@1234"
+        }
     ]
 }
