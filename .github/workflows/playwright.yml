@@ -1,26 +1,141 @@
+# =============================================================================
+# GitHub Actions - Playwright Automation Workflow
+# =============================================================================
+#
+# Purpose:
+# This workflow automates the execution of Playwright tests on GitHub's
+# cloud runner instead of running them on my local machine.
+#
+# Workflow Execution Flow:
+#
+# 1. GitHub creates a fresh Ubuntu virtual machine.
+# 2. Repository code is downloaded.
+# 3. Required Node.js version is installed.
+# 4. Project dependencies are installed.
+# 5. Playwright browsers are installed.
+# 6. Playwright test suite is executed.
+#
+# Every workflow execution starts on a BRAND NEW machine.
+# Nothing from previous executions is available unless caching is configured.
+# =============================================================================
 name: Playwright Automation
 
+# -----------------------------------------------------------------------------
+# Trigger
+# -----------------------------------------------------------------------------
+# workflow_dispatch
+#
+# This allows me to manually execute the workflow from the GitHub Actions UI.
+#
+# Later we can also add:
+#
+# push           -> Execute after every push
+# pull_request   -> Execute on every PR
+# schedule        -> Execute automatically on a schedule
+# -----------------------------------------------------------------------------
 on:
   workflow_dispatch:
-
+# -----------------------------------------------------------------------------
+# Jobs
+# -----------------------------------------------------------------------------
+# A workflow can contain multiple jobs.
+#
+# Example:
+#
+# Build
+# Test
+# Deploy
+#
+# Currently we only have one job.
+# -----------------------------------------------------------------------------
 jobs:
   playwright-tests:
+     # -------------------------------------------------------------------------
+    # GitHub provides a temporary Ubuntu machine.
+    #
+    # ubuntu-latest means:
+    # GitHub creates a Linux VM for every execution.
+    #
+    # Supported runners:
+    #
+    # ubuntu-latest
+    # windows-latest
+    # macos-latest
+    # -------------------------------------------------------------------------
     runs-on: ubuntu-latest
-
+     # -----------------------------------------------------------------------
+      # Step 1
+      #
+      # Checkout repository
+      #
+      # Similar to:
+      #
+      # git clone <repository>
+      #
+      # Without this step GitHub has no project files to execute.
+      # -----------------------------------------------------------------------
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+ # -----------------------------------------------------------------------
+      # Step 2
+      #
+      # Install Node.js.
+      #
+      # GitHub runners don't automatically use my project's Node version.
+      # This installs the required version before executing npm commands.
+      # -----------------------------------------------------------------------
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
+  # -----------------------------------------------------------------------
+      # Step 3
+      #
+      # Install dependencies from package.json.
+      #
+      # Equivalent to running locally:
+      #
+      # npm install
+      # -----------------------------------------------------------------------
       - name: Install Dependencies
         run: npm install
+ # -----------------------------------------------------------------------
+      # Step 4
+      #
+      # Install Playwright browser binaries.
+      #
+      # Installing @playwright/test is NOT enough.
+      # Chromium, Firefox and WebKit also need to be downloaded.
+      #
+      # --with-deps installs required Linux packages as well.
+      # -----------------------------------------------------------------------
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-
+ # -----------------------------------------------------------------------
+      # Step 5
+      #
+      # Execute Playwright tests.
+      #
+      # This internally runs:
+      #
+      # npm run test:qa
+      #
+      # package.json
+      #      ↓
+      # cross-env ENV=qa
+      #      ↓
+      # runtime.ts
+      #      ↓
+      # playwright.config.ts
+      #      ↓
+      # Playwright Execution
+      #
+      # NOTE:
+      # GitHub runners DO NOT have a display.
+      # Therefore HEADLESS=true must be supplied.
+      # -----------------------------------------------------------------------
       - name: Run Playwright Tests
         run: npm run test:qa:parallel:headless
