@@ -83,21 +83,13 @@ export class RegisterAccountPage extends Basepage {
         await this.page.waitForTimeout(4000)
     }
     async getValidationMessages() {
-
     return {
-
         firstName: await this.getNormalizedText(this.firstNameValidation),
-
         lastName: await this.getNormalizedText(this.lastNameValidation),
-
         email: await this.getNormalizedText(this.emailValidation),
-
         telephone: await this.getNormalizedText(this.telephoneValidation),
-
         password: await this.getNormalizedText(this.passwordValidation),
-
         privacyPolicy: await this.getNormalizedText(this.privacyPolicyWarning)
-
     };
 
 }
