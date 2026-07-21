@@ -4,7 +4,7 @@ export const runtime = {
 
     browser: process.env.BROWSER || "chromium",
 
-    workers: Number(process.env.WORKERS ?? 1),
+    workers: Number(process.env.WORKERS ?? 3),
 
     headless: process.env.HEADLESS === "true"
 
