@@ -6,7 +6,18 @@
     "test:qa": "cross-env ENV=qa playwright test",
     "test:stage": "cross-env ENV=stage playwright test",
     "test:preprod": "cross-env ENV=preprod playwright test",
-    "test:run": "npx playwright test"
+    "test:run": "npx playwright test",
+
+    "test:qa:firefox": "cross-env ENV=qa BROWSER=firefox playwright test",
+    "test:qa:webkit": "cross-env ENV=qa BROWSER=webkit playwright test",
+
+    "test:stage:firefox": "cross-env ENV=stage BROWSER=firefox playwright test",
+    "test:stage:webkit": "cross-env ENV=stage BROWSER=webkit playwright test",
+
+     "test:preprod:firefox": "cross-env ENV=preProd BROWSER=firefox playwright test",
+    "test:preprod:webkit": "cross-env ENV=preProd BROWSER=webkit playwright test",
+
+    "test:qa:parallel:headless": "cross-env ENV=qa WORKERS=3 HEADLESS=false playwright test"
   },
   "keywords": [],
   "author": "",
