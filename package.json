@@ -13,7 +13,7 @@
     "test:stage:webkit": "cross-env ENV=stage BROWSER=webkit playwright test",
     "test:preprod:firefox": "cross-env ENV=preprod BROWSER=firefox playwright test",
     "test:preprod:webkit": "cross-env ENV=preprod BROWSER=webkit playwright test",
-    "test:qa:parallel:headless": "cross-env ENV=qa WORKERS=3 HEADLESS=false playwright test",
+    "test:qa:parallel:headless": "cross-env ENV=qa WORKERS=3 HEADLESS=true playwright test",
     "report:html": "playwright show-report",
     "report:allure": "allure serve allure-results",
     "report:allure:generate": "allure generate allure-results --clean -o allure-report",
