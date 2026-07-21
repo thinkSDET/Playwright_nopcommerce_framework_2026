@@ -1,8 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
-import { environments } from "./src/config/environments";
+import { ConfigManager } from "./src/config/ConfigManager";
 
 
-const env = process.env.ENV || "qa";
+const config = ConfigManager.load();
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -21,20 +21,28 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: config.execution.retries,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: config.execution.workers,
+   timeout: config.execution.timeout,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'https://naveenautomationlabs.com/opencart/',
-     baseURL: environments[env as keyof typeof environments],
+      baseURL: config.environment.baseURL,
+
+        headless: config.execution.headless,
+
+        screenshot: config.execution.screenshot,
+
+        video: config.execution.video,
+
+        trace: config.execution.trace
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
    // trace: 'on-first-retry',
-   headless:false
   },
 
   /* Configure projects for major browsers */
