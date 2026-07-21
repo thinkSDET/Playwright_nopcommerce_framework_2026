@@ -5,7 +5,8 @@
   "scripts": {
     "test:qa": "cross-env ENV=qa playwright test",
     "test:stage": "cross-env ENV=stage playwright test",
-    "test:preprod": "cross-env ENV=preprod playwright test"
+    "test:preprod": "cross-env ENV=preprod playwright test",
+    "test:run": "npx playwright test"
   },
   "keywords": [],
   "author": "",
