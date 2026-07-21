@@ -48,24 +48,3 @@ test("TC_REG_002 - Verify validation messages are displayed when submitting the 
         ).toBe(registerPageExpectedData.mandatoryFieldValidations[0].privacyPolicyWarning);
 
 });
-
-test("TC_REG_003 - Verify validation messages are displayed for invalid registration data", async ({
-    landingPage,
-    registerAccountPage
-}) => {
-
-});
-
-test("TC_REG_004 - Verify user cannot register with an email address that is already registered", async ({
-    landingPage,
-    registerAccountPage
-}) => {
-
-});
-
-test("TC_REG_005 - Verify registration behavior with optional fields and user preferences", async ({
-    landingPage,
-    registerAccountPage
-}) => {
-
-});
