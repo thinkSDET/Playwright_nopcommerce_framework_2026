@@ -19,4 +19,27 @@ export interface ExecutionConfig {
 export interface FrameworkConfig {
     environment: EnvironmentConfig;
     execution: ExecutionConfig;
+    browser: BrowserConfig;
+}
+
+export interface BrowserConfig {
+
+    name: string;
+
+    use: {
+
+        browserName: "chromium" | "firefox" | "webkit";
+
+        channel?: string;
+
+        viewport?: {
+
+            width: number;
+
+            height: number;
+
+        };
+
+    };
+
 }

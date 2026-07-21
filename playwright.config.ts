@@ -31,15 +31,17 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'https://naveenautomationlabs.com/opencart/',
-      baseURL: config.environment.baseURL,
+     ...config.browser.use,
 
-        headless: config.execution.headless,
+    baseURL: config.environment.baseURL,
 
-        screenshot: config.execution.screenshot,
+    headless: config.execution.headless,
 
-        video: config.execution.video,
+    screenshot: config.execution.screenshot,
 
-        trace: config.execution.trace
+    video: config.execution.video,
+
+    trace: config.execution.trace
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
    // trace: 'on-first-retry',
