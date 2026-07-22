@@ -1,0 +1,73 @@
+# =============================================================================
+# GitHub Actions Tutorial - 02
+# Topic:
+# Generate and Upload Allure Report
+#
+# Objective:
+# 1. Execute Playwright Tests
+# 2. Generate Allure Report
+# 3. Upload Allure Report as GitHub Artifact
+#
+# Important:
+# if: always()
+#
+# Even if tests fail,
+# GitHub should still generate and upload the Allure Report.
+# =============================================================================
+
+name: Playwright + Allure Report
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  playwright-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Step 1 - Download Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2 - Install Node
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Step 3 - Install Project Dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # Step 4 - Install Playwright Browsers
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      # Step 5 - Execute Playwright Tests
+      - name: Run Playwright Tests
+        run: npm run test:qa:parallel:headless
+
+      # Step 6 - Generate Allure Report
+      #
+      # if: always()
+      #
+      # Generate report even when tests fail.
+      #
+      - name: Generate Allure Report
+        if: always()
+        run: npm run report:allure:generate
+
+      # Step 7 - Upload Allure Report
+      #
+      # Upload the generated report so it can be downloaded
+      # from the GitHub Actions Artifacts section.
+      #
+      - name: Upload Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
