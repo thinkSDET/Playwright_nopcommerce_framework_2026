@@ -1,0 +1,137 @@
+name: Playwright Browser Selection
+
+on:
+  workflow_dispatch:
+    inputs:
+
+      environment:
+        description: "Select Environment"
+        required: true
+        default: qa
+        type: choice
+        options:
+          - qa
+          - stage
+          - preprod
+
+      chromium:
+        description: "Run Chromium"
+        type: boolean
+        default: true
+
+      firefox:
+        description: "Run Firefox"
+        type: boolean
+        default: false
+
+      webkit:
+        description: "Run WebKit"
+        type: boolean
+        default: false
+
+      workers:
+        description: "Workers"
+        type: choice
+        default: "3"
+        options:
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+
+      headless:
+        description: "Headless Mode"
+        type: boolean
+        default: true
+
+###############################################################
+# Chromium
+###############################################################
+
+jobs:
+
+  chromium:
+
+    if: ${{ inputs.chromium }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install
+
+      - run: npx playwright install --with-deps
+
+      - name: Execute Chromium Tests
+        run: npm run test:run
+        env:
+          ENV: ${{ inputs.environment }}
+          BROWSER: chromium
+          WORKERS: ${{ inputs.workers }}
+          HEADLESS: ${{ inputs.headless }}
+
+###############################################################
+# Firefox
+###############################################################
+
+  firefox:
+
+    if: ${{ inputs.firefox }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install
+
+      - run: npx playwright install --with-deps
+
+      - name: Execute Firefox Tests
+        run: npm run test:run
+        env:
+          ENV: ${{ inputs.environment }}
+          BROWSER: firefox
+          WORKERS: ${{ inputs.workers }}
+          HEADLESS: ${{ inputs.headless }}
+
+###############################################################
+# WebKit
+###############################################################
+
+  webkit:
+
+    if: ${{ inputs.webkit }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install
+
+      - run: npx playwright install --with-deps
+
+      - name: Execute WebKit Tests
+        run: npm run test:run
+        env:
+          ENV: ${{ inputs.environment }}
+          BROWSER: webkit
+          WORKERS: ${{ inputs.workers }}
+          HEADLESS: ${{ inputs.headless }}
