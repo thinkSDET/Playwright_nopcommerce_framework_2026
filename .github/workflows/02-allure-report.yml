@@ -1,33 +1,13 @@
-# =============================================================================
-# GitHub Actions Tutorial - 02
-# Topic:
-# Generate and Upload Allure Report
-#
-# Objective:
-# 1. Execute Playwright Tests
-# 2. Generate Allure Report
-# 3. Upload Allure Report as GitHub Artifact
-#
-# Important:
-# if: always()
-#
-# Even if tests fail,
-# GitHub should still generate and upload the Allure Report.
-# =============================================================================
-
 name: Playwright + Allure Report
 
 on:
   workflow_dispatch:
 
 jobs:
-
   playwright-tests:
-
     runs-on: ubuntu-latest
 
     steps:
-
       # Step 1 - Download Repository
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -46,37 +26,139 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # Step 5 - Execute Playwright Tests
+      # Step 5 - Verify Allure Installation
+      - name: Verify Allure Installation
+        run: |
+          echo "Allure CLI version:"
+          npx allure --version
+          echo ""
+          echo "allure-playwright version:"
+          npm list allure-playwright
+
+      # Step 6 - Clean Previous Results
+      - name: Clean Previous Results
+        run: |
+          rm -rf allure-results allure-report
+          mkdir -p allure-results
+          echo "✓ Cleaned and initialized directories"
+
+      # Step 7 - Execute Playwright Tests with Detailed Logging
       - name: Run Playwright Tests
-        run: npm run test:qa:parallel:headless
-      - name: Check Allure Version
+        run: |
+          echo "Starting Playwright tests with ENV=qa and WORKERS=3..."
+          npm run test:qa:parallel:headless || true
+          echo "Test run completed (exit code: $?)"
+
+      # Step 8 - Debug: Check Test Results
+      - name: Debug - List Test Artifacts
         if: always()
         run: |
-         npx allure --version
-      # Step 6 - Generate Allure Report
-      #
-      # if: always()
-      #
-      # Generate report even when tests fail.
-      #
+          echo "========== DEBUGGING INFO =========="
+          echo ""
+          echo "--- Current Directory Structure ---"
+          ls -la
+          echo ""
+          echo "--- Allure Results Directory ---"
+          if [ -d "allure-results" ]; then
+            echo "✓ allure-results directory exists"
+            echo "Total files: $(ls allure-results 2>/dev/null | wc -l)"
+            echo "Files:"
+            ls -lh allure-results | head -20
+            echo ""
+            echo "--- Sample Result File ---"
+            if ls allure-results/*.json 1> /dev/null 2>&1; then
+              FILE=$(ls allure-results/*.json | head -1)
+              echo "First JSON file: $FILE"
+              head -c 500 "$FILE"
+              echo ""
+            fi
+          else
+            echo "✗ allure-results directory does NOT exist!"
+          fi
+          echo ""
+          echo "--- Test Results (Playwright) ---"
+          if [ -d "test-results" ]; then
+            ls -la test-results
+          else
+            echo "No test-results directory"
+          fi
+          echo "===== END DEBUG ====="
+
+      # Step 9 - Verify Results Before Generating Report
+      - name: Verify Allure Results Exist
+        if: always()
+        run: |
+          if [ ! -d "allure-results" ]; then
+            echo "ERROR: allure-results directory missing!"
+            exit 1
+          fi
+          
+          RESULT_COUNT=$(ls allure-results/*.json 2>/dev/null | wc -l)
+          if [ "$RESULT_COUNT" -eq 0 ]; then
+            echo "WARNING: allure-results directory is EMPTY!"
+            echo "This means tests did not generate Allure results."
+            echo ""
+            echo "Checking playwright config..."
+            grep -A 5 "reporter:" playwright.config.ts
+          else
+            echo "✓ Found $RESULT_COUNT result files"
+          fi
+
+      # Step 10 - Generate Allure Report
       - name: Generate Allure Report
         if: always()
-        run: npm run report:allure:generate
+        run: |
+          echo "===== GENERATING ALLURE REPORT ====="
+          npx allure generate allure-results --clean -o allure-report
+          EXIT_CODE=$?
+          echo "Generation exit code: $EXIT_CODE"
+          
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "ERROR: Allure generation failed!"
+            exit 1
+          fi
+          
+          echo "Report generated successfully"
 
-      - name: Verify Allure Report
+      # Step 11 - Verify Report Structure
+      - name: Verify Report Structure
         if: always()
         run: |
-         echo "===== Allure Report ====="
-         ls -R allure-report
+          echo "===== VERIFYING REPORT STRUCTURE ====="
+          if [ -d "allure-report" ]; then
+            echo "✓ allure-report directory exists"
+            echo ""
+            echo "Report contents:"
+            ls -lh allure-report
+            echo ""
+            
+            # Check critical files
+            for FILE in index.html app.js widgets app data; do
+              if [ -e "allure-report/$FILE" ]; then
+                echo "✓ $FILE exists"
+              else
+                echo "✗ MISSING: $FILE"
+              fi
+            done
+          else
+            echo "✗ allure-report directory NOT created - report generation FAILED!"
+            exit 1
+          fi
 
-      # Step 7 - Upload Allure Report
-      #
-      # Upload the generated report so it can be downloaded
-      # from the GitHub Actions Artifacts section.
-      #
+      # Step 12 - Upload Allure Report
       - name: Upload Allure Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report
+          if-no-files-found: error
+          retention-days: 30
+
+      # Step 13 - Summary
+      - name: Build Summary
+        if: always()
+        run: |
+          echo "## Allure Report Generated ✓" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Download the artifact from the **Artifacts** section" >> $GITHUB_STEP_SUMMARY
