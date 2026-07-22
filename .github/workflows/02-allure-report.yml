@@ -49,7 +49,9 @@ jobs:
       # Step 5 - Execute Playwright Tests
       - name: Run Playwright Tests
         run: npm run test:qa:parallel:headless
-
+      - name: Check Allure Version
+        run: |
+         allure --version
       # Step 6 - Generate Allure Report
       #
       # if: always()
