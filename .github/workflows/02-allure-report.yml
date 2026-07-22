@@ -60,6 +60,12 @@ jobs:
         if: always()
         run: npm run report:allure:generate
 
+      - name: Verify Allure Report
+        if: always()
+        run: |
+         echo "===== Allure Report ====="
+         ls -R allure-report
+
       # Step 7 - Upload Allure Report
       #
       # Upload the generated report so it can be downloaded
