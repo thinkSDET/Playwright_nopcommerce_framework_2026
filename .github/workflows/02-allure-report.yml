@@ -52,7 +52,7 @@ jobs:
       - name: Check Allure Version
         if: always()
         run: |
-         allure --version
+         npx allure --version
       # Step 6 - Generate Allure Report
       #
       # if: always()
