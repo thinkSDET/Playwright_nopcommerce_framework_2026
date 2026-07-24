@@ -16,10 +16,14 @@ export class LandingPage extends Basepage {
         this.login = page.locator('//a[text()="Login"]')
     }
     async navigateToLandingPage() {
-        await this.page.goto("");
+        await this.goToUrl('')
     }
     async getPageTitle() {
-        return await this.page.title()
+        try {
+            return await this.page.title()
+        }catch(error){
+          throw new Error("Failed to get the page title")
+        }  
     }
 
     async getCopyrightText() {
