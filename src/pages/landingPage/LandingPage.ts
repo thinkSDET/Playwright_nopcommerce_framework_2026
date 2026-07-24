@@ -19,7 +19,11 @@ export class LandingPage extends Basepage {
         await this.goToUrl('')
     }
     async getPageTitle() {
-        return await this.page.title()
+        try {
+            return await this.page.title()
+        }catch(error){
+          throw new Error("Failed to get the page title")
+        }  
     }
 
     async getCopyrightText() {
