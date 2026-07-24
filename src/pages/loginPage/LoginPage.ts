@@ -6,7 +6,7 @@ export class LoginPage extends Basepage {
     private readonly inputPassword: Locator
     private readonly loginButton: Locator
     private readonly forgetPasswordLink: Locator
-    private readonly warningMessage:Locator
+    private readonly warningMessage: Locator
 
     constructor(page: Page) {
         super(page)
@@ -16,16 +16,20 @@ export class LoginPage extends Basepage {
         this.forgetPasswordLink = page.locator("//form//a[text()='Forgotten Password']")
         this.warningMessage = page.locator("//div[@class='alert alert-danger alert-dismissible']")
     }
-    
+
     async submitLogin(emailAddress: string, password: string) {
-        await this.inputEmailAddress.fill(emailAddress);
-        await this.inputPassword.fill(password);
-        await this.loginButton.click();
+        try {
+            await this.inputEmailAddress.fill(emailAddress);
+            await this.inputPassword.fill(password);
+            await this.loginButton.click();
+        } catch (error) {
+          throw new Error("Login flow failed");
+        }
     }
-    async getWarnigMessage(){
-       return await this.getNormalizedText(this.warningMessage)
+    async getWarnigMessage() {
+        return await this.getNormalizedText(this.warningMessage)
     }
     async clickForgotPassword() {
         await this.forgetPasswordLink.click()
-    } 
+    }
 }
